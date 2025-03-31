@@ -1,7 +1,7 @@
 let canvas = document.getElementById('des')
 let des = canvas.getContext('2d')
 const f1 = new Carro(100,660,60,100,'./img/carro2.png')
-const linCheg = new Carro2(0,-15000,700,200,'./img/linha-chegada.png')
+const linCheg = new Est(0,-10000,700,200,'./img/linha-chegada.png')
 const c1 = new Carro2(250,660,60,100,'./img/carro3.png')
 const c2 = new Carro2(400,660,60,100,'./img/carro1.png')
 const bg = new Est(296,32,8,40,'yellow')
@@ -66,7 +66,7 @@ function colisao(){
         }
     }else if(f1.colid(coin)){
         f1.score += 1
-    }else if((f1.colid(rachadura))||(f1.colid(rachadura2))){
+    }else if((f1.colid(rachadura))){
         f1.vida -= 0.5
         batida.play()
     }
@@ -96,7 +96,7 @@ function atualizar(){
     cone.moveRach()
     cone2.moveRach()
     rachadura.moveRach()
-    linCheg.move()
+    linCheg.moveRach()
     if(f1.vida < 5){
         heart.move()
     }
@@ -169,7 +169,6 @@ function desenharCont(){
     barr.des_barr()
     barr2.des_barr()
     rachadura.draw()
-    rachadura2.draw()
     c1.draw()
     c2.draw()
     f1.draw()
@@ -220,7 +219,7 @@ function main(){
     if(c2.y>=1500){
         c2.y = 1500
     }
-    if(linCheg.y >= 0){
+    if(linCheg.y >= 909){
         jogo = 4
     }
 }
