@@ -1,12 +1,14 @@
 let canvas = document.getElementById('des')
 let des = canvas.getContext('2d')
 const f1 = new Carro(100,660,60,100,'./img/carro2.png')
-const chegada = new Est(0,-15000,600,120,'./img/chegada.png')
-const chegada2 = new Est(0,-22000,600,120,'./img/chegada.png')
-const chegada3 = new Est(0,-26000,600,120,'./img/chegada.png')
+const chegada = new Est(0,-15000,600,120,'./img/linha-chegada.png')
+const chegada2 = new Est(0,-26000,600,120,'./img/linha-chegada.png')
+const chegada3 = new Est(0,-35000,600,120,'./img/linha-chegada.png')
+const chegada4 = new Est(0,-46000,600,120,'./img/linha-chegada.png')
+const c3 = new Carro2(360,-1000,60,100,'./img/carroPasseio.png')
+const c4 = new Carro2(360,-1000,60,100,'./img/carro1.png')
 const c1 = new Carro2(250,660,60,100,'./img/carro3.png')
 const c2 = new Carro2(400,660,60,100,'./img/carro1.png')
-const c3 = new Carro2(360,-1000,60,100,'./img/carroPasseio.png')
 const bg = new Est(296,32,8,40,'yellow')
 const bg2 = new Est(296,132,8,40,'yellow')
 const bg3 = new Est(296,232,8,40,'yellow')
@@ -18,12 +20,14 @@ const bg8 = new Est(296,732,8,40,'yellow')
 const bg9 = new Est(296,832,8,40,'yellow')
 const rachadura = new Est(300, 500, 150, 150,'./img/rachadura.png')
 const rachadura2 = new Est(400, 700, 150, 150,'./img/rachadura.png')
+const rachadura3 = new Est(400, 700, 150, 150,'./img/rachadura.png')
 const barr = new Barr(0,0,10,800,'yellow')  
 const barr2 = new Barr(590,0,10,800,'yellow')  
 const heart = new Carro2(200,200,25,25,'./img/heart.png')
 const coin = new Carro2(250,-1000,25,25,'./img/coin.png')
 const cone = new Est(800, -1000, 50,50,'./img/cone.png')
 const cone2 = new Est(1000, -1000, 50,50,'./img/cone.png')
+const cone3 = new Est(1000, -1000, 50,50,'./img/cone.png')
 let som1 = new Audio('./img/motor.wav')
 let som2 = new Audio('./img/Daniel.wav')
 let batida = new Audio('./img/batida.mp3')
@@ -33,9 +37,10 @@ som2.loop = true
 som2.volume = 0.2
 batida.volume = 0.1
 let jogo = 0
-let fase = 1
+let fase = 0
 let time = 0
 let temporizadorCarro = 0
+let temporizadorCarro2 = 0
 document.addEventListener('keydown', (e)=>{
     if(e.key === 'ArrowLeft'){
         f1.dir -= 7
@@ -59,7 +64,7 @@ document.addEventListener('keypress', (e)=>{
     }
 })
 function colisao(){
-    if((f1.colid(c1))||(f1.colid(c2))||(f1.colid(cone))||(f1.colid(cone2))||(f1.colid(c3))){
+    if((f1.colid(c1))||(f1.colid(c2))||(f1.colid(cone))||(f1.colid(cone2))||(f1.colid(cone3))||(f1.colid(c3))||(f1.colid(c4))){
         f1.vida -= 1
         batida.play()
     }else if((f1.colid(heart))&&(f1.vida<5)){
@@ -69,7 +74,7 @@ function colisao(){
         }
     }else if(f1.colid(coin)){
         f1.score += 1
-    }else if((f1.colid(rachadura))||(f1.colid(rachadura2))){
+    }else if((f1.colid(rachadura))||(f1.colid(rachadura2))||(f1.colid(rachadura3))){
         f1.vida -= 0.5
         batida.play()
     }
@@ -85,20 +90,42 @@ function atualizar(){
     if(time>1505){
         time = 1505
     }
-    if(fase == 2){
-        temporizadorCarroCarro += 5
-        if(temporizadorCarro >= 1000){
+    if(fase>=2){
+        temporizadorCarro += 5
+        if(temporizadorCarro >= 200){
             if(c3.y <= 910){
                 c3.move()
             } else{
-                temporizadorCarroCarro = 0
+                temporizadorCarro = 0
+                c3.y = -1200
             }
             desenhar(c3.draw())
         }
+        rachadura2.moveRach()
+        cone2.moveRach()
+        console.log("Distância carro preto: ",c3.y)
+        if(fase>=3){
+            temporizadorCarro2 += 5
+            if(temporizadorCarro2 >= 200){
+                if(c4.y <= 910){
+                    c4.move()
+                } else{
+                    temporizadorCarro2 = 0
+                    c4.y = -1200
+                }
+                desenhar(c4.draw())
+            }
+            console.log("Distância carro amarelo: ",c4.y)
+        }
+        if(fase==4){
+            rachadura3.move()
+            desenhar(rachadura3.draw())
+            cone3.move()
+            desenhar(cone3.draw())
+            console.log("Fazendo fase 4")
+        }
     }
     time += 5
-    console.log("Distância carro 1: ", c1.y)
-    console.log("Distância carro 2: ", c2.y)
     f1.move()
     bg.move()
     bg2.move()
@@ -111,12 +138,11 @@ function atualizar(){
     bg9.move()
     coin.move()
     cone.moveRach()
-    cone2.moveRach()
     rachadura.moveRach()
-    rachadura2.moveRach()
-    chegada.moveRach()
-    chegada2.moveRach()
-    chegada3.moveRach()
+    chegada.moveChegada()
+    chegada2.moveChegada()
+    chegada3.moveChegada()
+    chegada4.moveChegada()
     if(f1.vida < 5){
         heart.move()
     }
@@ -140,13 +166,21 @@ function desenhar(){
     bg7.des_quad()
     bg8.des_quad()
     bg9.des_quad()
+    if(fase >= 2){
+        rachadura2.draw()
+        cone2.draw()
+    }
+    if(fase >= 3){
+
+    }
+    if(fase == 4){
+
+    }
     barr.des_barr()
     barr2.des_barr()
     coin.draw()
     cone.draw()
-    cone2.draw()
     rachadura.draw()
-    rachadura2.draw()
     chegada.draw()
     chegada2.draw()
     chegada3.draw()
@@ -192,7 +226,6 @@ function desenharCont(){
     barr.des_barr()
     barr2.des_barr()
     rachadura.draw()
-    rachadura2.draw()
     c1.draw()
     c2.draw()
     f1.draw()
@@ -201,8 +234,6 @@ function desenharInicio(){
     des.fillText('Corrida!',230,100)
     des.font = '45px Arial bolder'
     des.fillStyle = 'white'
-    des.fillText('Controles:',210,200)
-    des.fillText('Utilize as setinhas da direita e esquerda para se movimentar',30,400,530)
     des.fillText('Pressione Enter para começar...',45,700,500)
 }
 function desenharGameOver(){
@@ -213,6 +244,16 @@ function desenharFim(){
     des.fillText('Você ganhou!',160,300)
 }
 function main(){
+    console.log("Distância da linha de chegada 1: ",chegada.y)
+    console.log("Distância da linha de chegada 2: ",chegada2.y)
+    console.log("Distância da linha de chegada 3: ",chegada3.y)
+    console.log("Distância da linha de chegada 4: ",chegada4.y)
+    if(fase == 3){
+        console.log("Fase 3 iniciada")
+    }
+    if(fase == 4){
+        console.log("Fase 4 iniciada")
+    }
     if(jogo == 0){
         des.clearRect(0,0,600,800)
         desenharInicio()
@@ -250,7 +291,11 @@ function main(){
         chegada2.y = 1500
         fase = 3
     }
-    if(chegada3.y>=800){
+    if(chegada3.y>=1500){
+        chegada3.y = 1500
+        fase = 4
+    }
+    if(chegada4.y>=1500){
         jogo = 4
     }
 }

@@ -4,13 +4,11 @@
     box-sizing: border-box;
     font-family: 'Arial', sans-serif;
 }
-
 body {
     background-color: #f0f0f0;
     color: #333;
     line-height: 1.6;
 }
-
 main {
     display: flex;
     justify-content: center;
@@ -18,12 +16,10 @@ main {
     min-height: 100vh;
     padding: 20px;
 }
-
 form {
     width: 100%;
     max-width: 1200px;
 }
-
 .container {
     display: flex;
     justify-content: center;
@@ -33,16 +29,18 @@ form {
     padding: 0 20px;
     justify-content: center;
 }
-
 .cont-item {
     flex: 0 1 auto;
     min-width: 250px;
     width: auto;
     max-width: 100%;
+    transition: transform 0.3s ease;
 }
-
+.cont-item:hover{
+    transform: translateY(-5px);
+}
 #des {
-    background-color: #222;
+    background-color: gray;
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     width: 100%;
@@ -50,7 +48,6 @@ form {
     height: auto;
     aspect-ratio: 600/800; 
 }
-
 #info, #objet {
     background-color: #fff;
     padding: 20px;
@@ -59,7 +56,6 @@ form {
     width: 250px;
     height: auto;
 }
-
 #info h3, #objet h3 {
     color: #2c3e50;
     margin-bottom: 15px;
@@ -67,7 +63,6 @@ form {
     border-bottom: 2px solid #3498db;
     padding-bottom: 8px;
 }
-
 article p {
     color: #555;
     margin-bottom: 10px;    

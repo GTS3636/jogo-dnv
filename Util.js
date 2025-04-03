@@ -130,6 +130,15 @@ class Est extends Obj{
         }
         this.y += vel
     }
+    moveChegada(){
+        let vel
+        let firsTime = true
+        if(firsTime == true){
+            vel = 7
+            firsTime = false
+        }
+        this.y += vel
+    }
 }
 class Barr extends Obj{
         des_barr(){
