@@ -1,9 +1,12 @@
 let canvas = document.getElementById('des')
 let des = canvas.getContext('2d')
 const f1 = new Carro(100,660,60,100,'./img/carro2.png')
-const linCheg = new Est(0,-10000,700,200,'./img/linha-chegada.png')
+const chegada = new Est(0,-15000,600,120,'./img/chegada.png')
+const chegada2 = new Est(0,-22000,600,120,'./img/chegada.png')
+const chegada3 = new Est(0,-26000,600,120,'./img/chegada.png')
 const c1 = new Carro2(250,660,60,100,'./img/carro3.png')
 const c2 = new Carro2(400,660,60,100,'./img/carro1.png')
+const c3 = new Carro2(360,-1000,60,100,'./img/carroPasseio.png')
 const bg = new Est(296,32,8,40,'yellow')
 const bg2 = new Est(296,132,8,40,'yellow')
 const bg3 = new Est(296,232,8,40,'yellow')
@@ -13,7 +16,8 @@ const bg6 = new Est(296,532,8,40,'yellow')
 const bg7 = new Est(296,632,8,40,'yellow')
 const bg8 = new Est(296,732,8,40,'yellow')
 const bg9 = new Est(296,832,8,40,'yellow')
-const rachadura = new Est(300, 500, 100, 100,'./img/rachadura.png')
+const rachadura = new Est(300, 500, 150, 150,'./img/rachadura.png')
+const rachadura2 = new Est(400, 700, 150, 150,'./img/rachadura.png')
 const barr = new Barr(0,0,10,800,'yellow')  
 const barr2 = new Barr(590,0,10,800,'yellow')  
 const heart = new Carro2(200,200,25,25,'./img/heart.png')
@@ -27,18 +31,17 @@ som1.loop = true
 som1.volume = 0.2
 som2.loop = true
 som2.volume = 0.2
-batida.volume = 0.2
+batida.volume = 0.1
 let jogo = 0
+let fase = 1
 let time = 0
+let temporizadorCarro = 0
 document.addEventListener('keydown', (e)=>{
     if(e.key === 'ArrowLeft'){
         f1.dir -= 7
         
     }else if(e.key === 'ArrowRight'){
         f1.dir += 7
-    }
-    if(e.key == "a"){
-        jogo = 2
     }
 })
 document.addEventListener('keyup', (e)=>{
@@ -56,7 +59,7 @@ document.addEventListener('keypress', (e)=>{
     }
 })
 function colisao(){
-    if((f1.colid(c1))||(f1.colid(c2))||(f1.colid(cone))||(f1.colid(cone2))){
+    if((f1.colid(c1))||(f1.colid(c2))||(f1.colid(cone))||(f1.colid(cone2))||(f1.colid(c3))){
         f1.vida -= 1
         batida.play()
     }else if((f1.colid(heart))&&(f1.vida<5)){
@@ -66,7 +69,7 @@ function colisao(){
         }
     }else if(f1.colid(coin)){
         f1.score += 1
-    }else if((f1.colid(rachadura))){
+    }else if((f1.colid(rachadura))||(f1.colid(rachadura2))){
         f1.vida -= 0.5
         batida.play()
     }
@@ -78,6 +81,20 @@ function atualizar(){
     }else{
         c1.move1()
         c2.move2()
+    }
+    if(time>1505){
+        time = 1505
+    }
+    if(fase == 2){
+        temporizadorCarroCarro += 5
+        if(temporizadorCarro >= 1000){
+            if(c3.y <= 910){
+                c3.move()
+            } else{
+                temporizadorCarroCarro = 0
+            }
+            desenhar(c3.draw())
+        }
     }
     time += 5
     console.log("Distância carro 1: ", c1.y)
@@ -96,7 +113,10 @@ function atualizar(){
     cone.moveRach()
     cone2.moveRach()
     rachadura.moveRach()
-    linCheg.moveRach()
+    rachadura2.moveRach()
+    chegada.moveRach()
+    chegada2.moveRach()
+    chegada3.moveRach()
     if(f1.vida < 5){
         heart.move()
     }
@@ -126,7 +146,10 @@ function desenhar(){
     cone.draw()
     cone2.draw()
     rachadura.draw()
-    linCheg.draw()
+    rachadura2.draw()
+    chegada.draw()
+    chegada2.draw()
+    chegada3.draw()
     if(f1.vida<5){
         heart.draw()  
     }
@@ -169,6 +192,7 @@ function desenharCont(){
     barr.des_barr()
     barr2.des_barr()
     rachadura.draw()
+    rachadura2.draw()
     c1.draw()
     c2.draw()
     f1.draw()
@@ -189,7 +213,6 @@ function desenharFim(){
     des.fillText('Você ganhou!',160,300)
 }
 function main(){
-    console.log("Distância chegada: ",linCheg.y)
     if(jogo == 0){
         des.clearRect(0,0,600,800)
         desenharInicio()
@@ -219,7 +242,15 @@ function main(){
     if(c2.y>=1500){
         c2.y = 1500
     }
-    if(linCheg.y >= 909){
+    if(chegada.y>=1500){
+        chegada.y = 1500
+        fase = 2
+    }
+    if(chegada2.y>=1500){
+        chegada2.y = 1500
+        fase = 3
+    }
+    if(chegada3.y>=800){
         jogo = 4
     }
 }
